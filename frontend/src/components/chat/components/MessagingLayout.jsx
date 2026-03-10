@@ -9,7 +9,7 @@ export function MessagingLayout() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/v1/message/all-users')
+        const response = await fetch('/api/v1/message/all-users')
         const data = await response.json()
         setConversations(data)
       } catch (error) {

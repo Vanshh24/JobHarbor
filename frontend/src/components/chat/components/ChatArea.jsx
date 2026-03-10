@@ -18,7 +18,7 @@ export function ChatArea({ conversationIndex, users }) {
     setInputValue('')
 
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/message/send/${conversation._id}`, {
+      const response = await fetch(`/api/v1/message/send/${conversation._id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ export function ChatArea({ conversationIndex, users }) {
 
     const fetchMessages = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/v1/message/messages?receiverId=${conversation._id}`, {
+        const response = await fetch(`/api/v1/message/messages?receiverId=${conversation._id}`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -57,7 +57,7 @@ export function ChatArea({ conversationIndex, users }) {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/v1/auth/me', {
+        const response = await fetch('/api/v1/auth/me', {
           credentials: 'include',
         });
         const data = await response.json()

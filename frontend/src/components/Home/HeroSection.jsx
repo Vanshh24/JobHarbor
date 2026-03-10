@@ -33,8 +33,7 @@ const HeroSection = () => {
       <div className="heroSection">
         <div className="container">
           <div className="title">
-            <h1>Find a job that suits</h1>
-            <h1>your interests and skills</h1>
+            <h1>Find a job that suits your interests and skills</h1>
             <p>
               Job search platform matching candidates with ideal roles
               and companies perfectly, sparking passion

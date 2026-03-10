@@ -3,6 +3,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../../main";
+import { apiBaseUrl } from "../../config.js";
+
 const PostJob = () => {
   const [companyName, setCompanyName] = useState("");
   const [title, setTitle] = useState("");
@@ -33,7 +35,7 @@ const PostJob = () => {
     }
     await axios
       .post(
-        "http://localhost:3000/api/v1/job/post",
+        `${apiBaseUrl}/job/post`,
         fixedSalary.length >= 4
           ? {
             companyName,

@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../../main";
 import toast from "react-hot-toast";
+import { apiBaseUrl } from "../../config.js";
 
 const JobDetails = () => {
   const { id } = useParams();
@@ -15,7 +16,7 @@ const JobDetails = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/api/v1/job/${id}`, {
+      .get(`${apiBaseUrl}/job/${id}`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -27,7 +28,7 @@ const JobDetails = () => {
 
     if (user && user.role === "Employer") {
       axios
-        .get(`http://localhost:3000/api/v1/application/employer/getall`, {
+        .get(`${apiBaseUrl}/application/employer/getall`, {
           withCredentials: true,
         })
         .then((res) => setApplications(res.data.applications))
@@ -38,7 +39,7 @@ const JobDetails = () => {
   const handleStatusChange = async (applicationId, status) => {
     try {
       await axios.put(
-        `http://localhost:3000/api/v1/application/update-status/${applicationId}`,
+        `${apiBaseUrl}/application/update-status/${applicationId}`,
         { status },
         { withCredentials: true }
       );
@@ -60,7 +61,7 @@ const JobDetails = () => {
   return (
     <section className="jobDetail page">
       <div className="container">
-        <div class="job-detail-header">
+        <div className="job-detail-header">
           <div className="job-details-name">
             <div className="job-name">
               <h1>{job.category}</h1>

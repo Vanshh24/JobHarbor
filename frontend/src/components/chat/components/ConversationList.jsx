@@ -19,7 +19,7 @@ export function ConversationList({
   useEffect(() => {
     const fetchChats = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/v1/message/all-chats', {
+        const response = await fetch('/api/v1/message/all-chats', {
           credentials: 'include',
         });
         const data = await response.json()

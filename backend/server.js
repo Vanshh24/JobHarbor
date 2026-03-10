@@ -9,23 +9,16 @@ cloudinary.v2.config({
   api_secret: process.env.CLOUDINARY_CLIENT_SECRET,
 });
 
-// Set the port
+// 🔹 Set the port
 const PORT = process.env.PORT || 3000;
 
 const httpServer = createServer(app);
+
 export const io = new Server(httpServer, {
   cors: {
-    origin: "*",
-    credentials: true
+    origin: true,
+    credentials: true,
   }
-});
-
-app.use((req, res, next) => {
-  res.setHeader(
-    "Content-Security-Policy",
-    "default-src 'self'; connect-src 'self' http://localhost:3000; script-src 'self'; style-src 'self'"
-  );
-  next();
 });
 
 const userSocketMap = {};
@@ -54,6 +47,6 @@ io.on("connection", (socket) => {
   });
 });
 
-httpServer.listen(PORT, () => {
+httpServer.listen(PORT, "0.0.0.0", () => {
   console.log(`IO Server running at port ${PORT}`);
 });

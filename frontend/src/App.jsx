@@ -5,7 +5,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import { Toaster } from "react-hot-toast";
-import ChatbotInterface from "./components/ChatbotInterface";
 import axios from "axios";
 import Navbar from "./components/Layout/Navbar";
 import Footer from "./components/Layout/Footer";
@@ -18,8 +17,7 @@ import PostJob from "./components/Job/PostJob";
 import NotFound from "./components/NotFound/NotFound";
 import MyJobs from "./components/Job/MyJobs";
 import socket from "./socket.js";
-import MessagingPage from "./components/chat/page.jsx";
-import { MessagingLayout } from "./components/chat/components/MessagingLayout.jsx";
+import { apiBaseUrl } from "./config.js";
 
 const App = () => {
   useEffect(() => {
@@ -34,7 +32,7 @@ const App = () => {
 
     socket.emit("welcome", "message from client");
 
-    socket.emit("sendMessage", { room: "abc123", message: "Hello from client", name: "vansh" });
+    socket.emit("sendMessage", { room: "abc123", message: "Hello from client", name: "xyz" });
 
     return () => {
       socket.off("connect");
@@ -47,7 +45,7 @@ const App = () => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/user/getuser",
+          `${apiBaseUrl}/user/getuser`,
           {
             withCredentials: true,
           }
@@ -75,12 +73,12 @@ const App = () => {
           <Route path="/applications/me" element={<MyApplications />} />
           <Route path="/job/post" element={<PostJob />} />
           <Route path="/job/me" element={<MyJobs />} />
-          <Route path="/messaging" element={<MessagingLayout />} />
+          {/* <Route path="/messaging" element={<MessagingLayout />} /> */}
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
         <Toaster />
-        <ChatbotInterface />
+        {/* <ChatbotInterface /> */}
       </BrowserRouter>
     </>
   );

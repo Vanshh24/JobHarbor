@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { apiBaseUrl } from "../../config";
 
 const Navbar = () => {
   const [show, setShow] = useState(false);
@@ -13,7 +14,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/v1/user/logout",
+        `${apiBaseUrl}/user/logout`,
         {
           withCredentials: true,
         }
@@ -48,11 +49,11 @@ const Navbar = () => {
                 : "MY APPLICATIONS"}
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link to={"/messaging"} onClick={() => setShow(false)}>
               MESSAGING
             </Link>
-          </li>
+          </li> */}
           {user && user.role === "Employer" ? (
             <>
               <li>
