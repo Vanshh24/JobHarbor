@@ -1,161 +1,199 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/public/inverted-color-jobharbor.png"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JobHarbor | Start Your Journey With Reputated Firms</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/public/inverted-color-jobharbor.png" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-    integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JobHarbor | Start Your Journey With Reputated Firms</title>
-</head>
+  <body>
+    <div id="root"></div>
 
-<body>
-  <div id="root"></div>
+    <!-- <script type="text/javascript">
+      // ── PDF.js worker setup ───────────────────────────────────────────────────
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
-  <script type="text/javascript">
-    // ── PDF.js worker setup ───────────────────────────────────────────────────
-    pdfjsLib.GlobalWorkerOptions.workerSrc =
-      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+      // ── File Upload Extension ─────────────────────────────────────────────────
+      let uploadRendered = false;
+      const fileUploadExtension = {
+        name: "file_upload",
+        type: "response",
+        match: () => {
+          if (uploadRendered) return false;
+          uploadRendered = true;
+          return true;
+        },
+        render: ({ trace, element }) => {
+          const wrapper = document.createElement("div");
 
-    // ── File Upload Extension ─────────────────────────────────────────────────
-    const fileUploadExtension = {
-      name: "file_upload",
-      type: "response",
-      match: ({ trace }) =>
-        trace.type === "file_upload" || trace.payload?.name === "file_upload",
-      render: ({ trace, element }) => {
-        const wrapper = document.createElement("div");
-
-        const dropzone = document.createElement("div");
-        dropzone.style.cssText = `
+          const dropzone = document.createElement("div");
+          dropzone.style.cssText = `
           border: 2px dashed #CBD5E1; border-radius: 10px;
           padding: 24px 16px; text-align: center;
           background: #F8FAFC; cursor: pointer;
           transition: border-color 0.2s, background 0.2s;
         `;
-        dropzone.innerHTML = `
+          dropzone.innerHTML = `
           <div style="font-size:28px;margin-bottom:8px">📄</div>
           <p style="margin:0 0 4px;font-size:14px;font-weight:600;color:#334155">Upload your resume</p>
           <p style="margin:0;font-size:12px;color:#94A3B8">PDF or DOCX · Click or drag and drop</p>
         `;
 
-        const input = document.createElement("input");
-        input.type = "file";
-        input.accept = ".pdf,.docx";
-        input.style.display = "none";
+          const input = document.createElement("input");
+          input.type = "file";
+          input.accept = ".pdf,.docx";
+          input.style.display = "none";
 
-        const status = document.createElement("p");
-        status.style.cssText = "margin:10px 0 0;font-size:13px;color:#64748B;text-align:center;min-height:18px";
+          const status = document.createElement("p");
+          status.style.cssText =
+            "margin:10px 0 0;font-size:13px;color:#64748B;text-align:center;min-height:18px";
 
-        wrapper.appendChild(dropzone);
-        wrapper.appendChild(input);
-        wrapper.appendChild(status);
-        element.appendChild(wrapper);
+          wrapper.appendChild(dropzone);
+          wrapper.appendChild(input);
+          wrapper.appendChild(status);
+          element.appendChild(wrapper);
 
-        // Drag & drop
-        dropzone.addEventListener("dragover", (e) => {
-          e.preventDefault();
-          dropzone.style.borderColor = "#3B82F6";
-          dropzone.style.background = "#EFF6FF";
-        });
-        dropzone.addEventListener("dragleave", () => {
-          dropzone.style.borderColor = "#CBD5E1";
-          dropzone.style.background = "#F8FAFC";
-        });
-        dropzone.addEventListener("drop", (e) => {
-          e.preventDefault();
-          dropzone.style.borderColor = "#CBD5E1";
-          dropzone.style.background = "#F8FAFC";
-          if (e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]);
-        });
-        dropzone.addEventListener("click", () => input.click());
-        input.addEventListener("change", () => {
-          if (input.files[0]) processFile(input.files[0]);
-        });
+          // Drag & drop
+          dropzone.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            dropzone.style.borderColor = "#3B82F6";
+            dropzone.style.background = "#EFF6FF";
+          });
+          dropzone.addEventListener("dragleave", () => {
+            dropzone.style.borderColor = "#CBD5E1";
+            dropzone.style.background = "#F8FAFC";
+          });
+          dropzone.addEventListener("drop", (e) => {
+            e.preventDefault();
+            dropzone.style.borderColor = "#CBD5E1";
+            dropzone.style.background = "#F8FAFC";
+            if (e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]);
+          });
+          dropzone.addEventListener("click", () => input.click());
+          input.addEventListener("change", () => {
+            if (input.files[0]) processFile(input.files[0]);
+          });
 
-        // Extract text from PDF
-        async function extractPDF(file) {
-          const pdf = await pdfjsLib.getDocument({ data: await file.arrayBuffer() }).promise;
-          let text = "";
-          for (let i = 1; i <= pdf.numPages; i++) {
-            const page = await pdf.getPage(i);
-            const content = await page.getTextContent();
-            text += content.items.map(item => item.str).join(" ") + "\n";
+          // Extract text from PDF
+          async function extractPDF(file) {
+            const pdf = await pdfjsLib.getDocument({
+              data: await file.arrayBuffer(),
+            }).promise;
+            let text = "";
+            for (let i = 1; i <= pdf.numPages; i++) {
+              const page = await pdf.getPage(i);
+              const content = await page.getTextContent();
+              text += content.items.map((item) => item.str).join(" ") + "\n";
+            }
+            return text.trim();
           }
-          return text.trim();
-        }
 
-        // Extract text from DOCX
-        async function extractDOCX(file) {
-          const raw = new TextDecoder("utf-8").decode(new Uint8Array(await file.arrayBuffer()));
-          return (raw.match(/<w:t[^>]*>([^<]*)<\/w:t>/g) || [])
-            .map(m => m.replace(/<[^>]+>/g, ""))
-            .join(" ")
-            .trim();
-        }
-
-        // Main file processor
-        async function processFile(file) {
-          const ext = file.name.slice(file.name.lastIndexOf(".")).toLowerCase();
-          if (![".pdf", ".docx"].includes(ext)) {
-            status.style.color = "#EF4444";
-            status.textContent = "Please upload a PDF or DOCX file only.";
-            return;
+          // Extract text from DOCX
+          async function extractDOCX(file) {
+            const raw = new TextDecoder("utf-8").decode(
+              new Uint8Array(await file.arrayBuffer()),
+            );
+            return (raw.match(/<w:t[^>]*>([^<]*)<\/w:t>/g) || [])
+              .map((m) => m.replace(/<[^>]+>/g, ""))
+              .join(" ")
+              .trim();
           }
-          dropzone.style.opacity = "0.5";
-          dropzone.style.pointerEvents = "none";
-          status.style.color = "#64748B";
-          status.textContent = "Reading " + file.name + "...";
-          try {
-            const text = ext === ".pdf" ? await extractPDF(file) : await extractDOCX(file);
-            if (!text || text.length < 50) throw new Error("Not enough text found in the file.");
-            const truncated = text.length > 6000 ? text.slice(0, 6000) + "\n[truncated]" : text;
-            window.voiceflow.chat.interact({
-              type: "text",
-              payload: "Here is my resume:\n\n" + truncated
-            });
-            dropzone.innerHTML = `
+
+          // Main file processor
+          async function processFile(file) {
+            const ext = file.name
+              .slice(file.name.lastIndexOf("."))
+              .toLowerCase();
+            if (![".pdf", ".docx"].includes(ext)) {
+              status.style.color = "#EF4444";
+              status.textContent = "Please upload a PDF or DOCX file only.";
+              return;
+            }
+            dropzone.style.opacity = "0.5";
+            dropzone.style.pointerEvents = "none";
+            status.style.color = "#64748B";
+            status.textContent = "Reading " + file.name + "...";
+            try {
+              const text =
+                ext === ".pdf"
+                  ? await extractPDF(file)
+                  : await extractDOCX(file);
+              if (!text || text.length < 50)
+                throw new Error("Not enough text found in the file.");
+
+              let processedText;
+
+              if (text.length > 4000) {
+                const start = text.slice(0, 2000);
+                const end = text.slice(-2000);
+                processedText = start + "\n...\n" + end;
+              } else {
+                processedText = text;
+              }
+
+              window.voiceflow.chat.interact({
+                type: "text",
+                payload: "Here is my resume:\n\n" + processedText,
+              });
+              dropzone.innerHTML = `
               <div style="font-size:24px;margin-bottom:6px">✅</div>
               <p style="margin:0;font-size:13px;font-weight:600;color:#16A34A">${file.name} uploaded successfully</p>
             `;
-            status.style.color = "#16A34A";
-            status.textContent = "JobBot is reading your resume...";
-          } catch (err) {
-            dropzone.style.opacity = "1";
-            dropzone.style.pointerEvents = "auto";
-            status.style.color = "#EF4444";
-            status.textContent = err.message;
+              status.style.color = "#16A34A";
+              status.textContent = "JobBot is reading your resume...";
+            } catch (err) {
+              dropzone.style.opacity = "1";
+              dropzone.style.pointerEvents = "auto";
+              status.style.color = "#EF4444";
+              status.textContent = err.message;
+            }
           }
-        }
-      }
-    };
+        },
+      };
 
-    // ── Voiceflow Widget Load ─────────────────────────────────────────────────
-    (function (d, t) {
-      var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
-      v.onload = function () {
-        window.voiceflow.chat.load({
-          verify: { projectID: '69a6f51f828521eb0b131be6' },
-          url: 'https://general-runtime.voiceflow.com',
-          versionID: 'production',
-          voice: {
-            url: "https://runtime-api.voiceflow.com"
-          },
-          assistant: {
-            extensions: [fileUploadExtension]
-          }
-        });
-      }
-      v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs";
-      v.type = "text/javascript";
-      s.parentNode.insertBefore(v, s);
-    })(document, 'script');
-  </script>
+      // --- Voiceflow Widget Load ----------------------------------------
+      (function (d, t) {
+        var v = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+        v.onload = function () {
+          // Clear old Voiceflow session for changes take effect.
+          localStorage.removeItem("voiceflow:' + '69e65f941202566774d8231b");
 
-  <script type="module" src="/src/main.jsx"></script>
-</body>
+          window.voiceflow.chat.load({
+            verify: { projectID: "69e65f941202566774d8231b" },
+            url: "https://general-runtime.voiceflow.com",
+            versionID: "production",
+            voice: {
+              url: "https://runtime-api.voiceflow.com",
+            },
+            assistant: {
+              extensions: [fileUploadExtension],
+            },
+            autostart: false,
+            allowDangerousHTML: true,
+          });
+        };
+        v.src =
+          "https://cdn.voiceflow.com/widget-next/bundle.mjs?v=" + Date.now();
+        v.type = "text/javascript";
+        s.parentNode.insertBefore(v, s);
+      })(document, "script");
+    </script> -->
 
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

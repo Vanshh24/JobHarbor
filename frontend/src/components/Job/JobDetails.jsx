@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -22,7 +22,7 @@ const JobDetails = () => {
       .then((res) => {
         setJob(res.data.job);
       })
-      .catch((error) => {
+      .catch(() => {
         navigateTo("/notfound");
       });
 
@@ -41,11 +41,13 @@ const JobDetails = () => {
       await axios.put(
         `${apiBaseUrl}/application/update-status/${applicationId}`,
         { status },
-        { withCredentials: true }
+        { withCredentials: true },
       );
-      setApplications(prev => prev.map(app =>
-        app._id === applicationId ? { ...app, status } : app
-      ));
+      setApplications((prev) =>
+        prev.map((app) =>
+          app._id === applicationId ? { ...app, status } : app,
+        ),
+      );
       toast.success(`Application ${status.toLowerCase()}`);
     } catch (error) {
       toast.error(error.response.data.message);
@@ -56,7 +58,7 @@ const JobDetails = () => {
     if (!isAuthorized) {
       navigateTo("/login");
     }
-  }, [navigateTo])
+  }, [navigateTo]);
 
   return (
     <section className="jobDetail page">
@@ -69,18 +71,22 @@ const JobDetails = () => {
             <div className="job-details-logo">
               <div className="job-detail-logo-desc">
                 <div>
-                  <i class="fa-solid fa-building"></i>
-                  <span>  {job.companyName}</span>
+                  <i className="fa-solid fa-building"></i>
+                  <span> {job.companyName}</span>
                 </div>
                 <div>
-                  <i class="fa-solid fa-location-dot"></i>
-                  <span>  {job.location}</span>
+                  <i className="fa-solid fa-location-dot"></i>
+                  <span> {job.location}</span>
                 </div>
               </div>
             </div>
           </div>
-          <div class="apply-job-button">
-            {(user.role === 'Job Seeker') && <Link to={`/application/${job._id}`}><button>Apply</button></Link>}
+          <div className="apply-job-button">
+            {user.role === "Job Seeker" && (
+              <Link to={`/application/${job._id}`}>
+                <button>Apply</button>
+              </Link>
+            )}
           </div>
         </div>
         <div className="banner">
@@ -93,7 +99,9 @@ const JobDetails = () => {
           <p>
             Location: <span>{job.location}</span>
           </p>
-          <p>Qualification: <span>{job.qualification}</span></p>
+          <p>
+            Qualification: <span>{job.qualification}</span>
+          </p>
           <p>
             Time Period: <span>{job.timePeriod}</span>
           </p>
@@ -116,27 +124,6 @@ const JobDetails = () => {
               </span>
             )}
           </p>
-          {/*user && user.role == "Employer" && (
-            <div className="applications">
-              <h4>Applications</h4>
-              {applications.length > 0 ? (
-                applications.map(app => (
-                  <div key={app._id} className="application">
-                    <p>{app.name}</p>
-                    <p>{app.status}</p>
-                    <button onClick={() => handleStatusChange(app._id, "Hired")}>
-                      Select
-                    </button>
-                    <button onClick={() => handleStatusChange(app._id, "Rejected")}>
-                      Reject
-                    </button>
-                  </div>
-                ))
-              ) : (
-                <p>No applications yet</p>
-              )}
-            </div>
-          )*/}
         </div>
       </div>
     </section>

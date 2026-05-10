@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import  { useContext, useState } from "react";
 import { Context } from "../../main";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -49,11 +49,11 @@ const Navbar = () => {
                 : "MY APPLICATIONS"}
             </Link>
           </li>
-          {/* <li>
+          <li>
             <Link to={"/messaging"} onClick={() => setShow(false)}>
               MESSAGING
             </Link>
-          </li> */}
+          </li>
           {user && user.role === "Employer" ? (
             <>
               <li>

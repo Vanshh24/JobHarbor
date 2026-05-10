@@ -44,7 +44,6 @@ export const login = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const logout = catchAsyncErrors(async (req, res, next) => {
-  res.clearCookie('token'); // Clear the token cookie
   res.status(200).json({
     success: true,
     message: 'Logged out successfully'
@@ -56,5 +55,16 @@ export const getUser = catchAsyncErrors((req, res, next) => {
   res.status(200).json({
     success: true,
     user,
+  });
+});
+
+export const getUserStats = catchAsyncErrors(async (req, res, next) => {
+  const jobSeekerCount = await User.countDocuments({ role: "Job Seeker" });
+  const employerCount = await User.countDocuments({ role: "Employer" });
+
+  res.status(200).json({
+    success: true,
+    jobSeekers: jobSeekerCount,
+    employers: employerCount,
   });
 });

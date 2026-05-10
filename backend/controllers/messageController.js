@@ -95,7 +95,7 @@ async function sendMessage(req, res) {
     // Real-time socket emission
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
-      io.to(receiverSocketId).emit("newMessage", newMessage);
+      io.to(receiverSocketId).emit("receiveMessage", { sender: senderId, message: text });
     }
 
     res.status(200).json({ message: "Message sent successfully", newMessage });

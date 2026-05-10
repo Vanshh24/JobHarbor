@@ -1,27 +1,27 @@
-import { ConversationList } from './ConversationList'
-import { ChatArea } from './ChatArea'
-import { useState, useEffect, useInsertionEffect } from 'react'
+import { ConversationList } from "./ConversationList";
+import { ChatArea } from "./ChatArea";
+import { useState, useEffect } from "react";
 
-export function MessagingLayout() {
-  const [selectedConversation, setSelectedConversation] = useState(-1)
-  const [conversations, setConversations] = useState([])
+export default function MessagingLayout() {
+  const [selectedConversation, setSelectedConversation] = useState(-1);
+  const [conversations, setConversations] = useState([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('/api/v1/message/all-users')
-        const data = await response.json()
-        setConversations(data)
+        const response = await fetch("/api/v1/message/all-users");
+        const data = await response.json();
+        setConversations(data);
       } catch (error) {
-        console.error('Error fetching users:', error)
+        console.error("Error fetching users:", error);
       }
-    }
+    };
 
-    fetchUsers()
-  }, [])
+    fetchUsers();
+  }, []);
 
   return (
-    <div className="flex h-screen bg-background" id='message-layout'>
+    <div className="flex h-screen bg-background" id="message-layout">
       {/* Left Sidebar - Conversations */}
       <ConversationList
         users={conversations}
@@ -35,5 +35,5 @@ export function MessagingLayout() {
         users={conversations}
       />
     </div>
-  )
+  );
 }

@@ -29,9 +29,10 @@ export const postJob = catchAsyncErrors(async (req, res, next) => {
     timePeriod,
     salaryFrom,
     salaryTo,
+    jobType,
   } = req.body;
 
-  if (!companyName || !title || !description || !category || !location || !timePeriod || !qualification) {
+  if (!companyName || !title || !description || !category || !location || !timePeriod || !qualification || !jobType) {
     return next(new ErrorHandler("Please provide full job details.", 400));
   }
 
@@ -56,6 +57,7 @@ export const postJob = catchAsyncErrors(async (req, res, next) => {
     description,
     category,
     vacancy,
+    jobType,
     qualification,
     location,
     fixedSalary,
@@ -83,6 +85,28 @@ export const getMyJobs = catchAsyncErrors(async (req, res, next) => {
     success: true,
     myJobs,
   });
+});
+
+export const countJobs = catchAsyncErrors(async (req, res, next) => {
+  const jobCount = await Job.countDocuments({ expired: false })
+  res.status(200).json({
+    success: true,
+    jobCount,
+  })
+})
+
+export const countByCategory = catchAsyncErrors(async (req, res, next) => {
+  const results = await Job.aggregate([
+    { $match: { expired: false } },
+    { $group: { _id: "$category", count: { $sum: 1 } } },
+  ]);
+
+  const categoryCounts = results.reduce((acc, { _id, count }) => {
+    acc[_id] = count;
+    return acc;
+  }, {});
+
+  res.status(200).json({ success: true, categoryCounts });
 });
 
 export const updateJob = catchAsyncErrors(async (req, res, next) => {

@@ -71,7 +71,7 @@ const MyApplications = () => {
 
   return (
     <section className="my_applications page">
-      {user && user.role === "Job Seeker" ? (
+      {user && user.role === "JobSeeker" ? (
         <div className="container">
           <h1>My Applications</h1>
           {applications.length <= 0 ? (

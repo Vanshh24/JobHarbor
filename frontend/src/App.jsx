@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import "./App.css";
 import { Context } from "./main";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -18,6 +18,8 @@ import NotFound from "./components/NotFound/NotFound";
 import MyJobs from "./components/Job/MyJobs";
 import socket from "./socket.js";
 import { apiBaseUrl } from "./config.js";
+import MessagingLayout from "./components/chat/components/MessagingLayout.jsx";
+
 
 const App = () => {
   useEffect(() => {
@@ -57,7 +59,7 @@ const App = () => {
       }
     };
     fetchUser();
-  }, [isAuthorized]);
+  }, []);
 
   return (
     <>
@@ -73,12 +75,11 @@ const App = () => {
           <Route path="/applications/me" element={<MyApplications />} />
           <Route path="/job/post" element={<PostJob />} />
           <Route path="/job/me" element={<MyJobs />} />
-          {/* <Route path="/messaging" element={<MessagingLayout />} /> */}
+          <Route path="/messaging" element={<MessagingLayout />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
         <Toaster />
-        {/* <ChatbotInterface /> */}
       </BrowserRouter>
     </>
   );

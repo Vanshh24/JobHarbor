@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +13,8 @@ const PostJob = () => {
   const [vacancy, setVacancy] = useState();
   const [qualification, setQualification] = useState("");
   const [location, setLocation] = useState("");
-  const [timePeriod, setTimePeriod] = useState("")
+  const [jobType, setJobType] = useState("");
+  const [timePeriod, setTimePeriod] = useState("");
   const [salaryFrom, setSalaryFrom] = useState();
   const [salaryTo, setSalaryTo] = useState();
   const [fixedSalary, setFixedSalary] = useState("");
@@ -38,34 +39,36 @@ const PostJob = () => {
         `${apiBaseUrl}/job/post`,
         fixedSalary.length >= 4
           ? {
-            companyName,
-            title,
-            description,
-            category,
-            vacancy,
-            qualification,
-            location,
-            timePeriod,
-            fixedSalary,
-          }
+              companyName,
+              title,
+              description,
+              category,
+              vacancy,
+              jobType,
+              qualification,
+              location,
+              timePeriod,
+              fixedSalary,
+            }
           : {
-            companyName,
-            title,
-            description,
-            category,
-            vacancy,
-            qualification,
-            location,
-            timePeriod,
-            salaryFrom,
-            salaryTo,
-          },
+              companyName,
+              title,
+              description,
+              category,
+              vacancy,
+              jobType,
+              qualification,
+              location,
+              timePeriod,
+              salaryFrom,
+              salaryTo,
+            },
         {
           withCredentials: true,
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       )
       .then((res) => {
         toast.success(res.data.message);
@@ -99,7 +102,6 @@ const PostJob = () => {
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Job Title"
               />
-
             </div>
             <div className="wrapper">
               <select
@@ -139,6 +141,12 @@ const PostJob = () => {
             </div>
             <input
               type="text"
+              value={jobType}
+              onChange={(e) => setJobType(e.target.value)}
+              placeholder="Job Type"
+            />
+            <input
+              type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               placeholder="Location"
@@ -149,7 +157,6 @@ const PostJob = () => {
               onChange={(e) => setQualification(e.target.value)}
               placeholder="Qualifications"
             />
-
 
             <div className="salary_wrapper">
               <input

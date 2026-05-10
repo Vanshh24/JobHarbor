@@ -5,7 +5,6 @@ import { Navigate } from 'react-router-dom';
 import HeroSection from './HeroSection';
 import HowItWorks from './HowItWorks';
 import PopularCategories from './PopularCategories';
-import PopularCompanies from './PopularCompanies';
 import Loader from '../Loader/Loader.jsx';
 
 const Home = () => {
