@@ -19,7 +19,7 @@ import MyJobs from "./components/Job/MyJobs";
 import socket from "./socket.js";
 import { apiBaseUrl } from "./config.js";
 import MessagingLayout from "./components/chat/components/MessagingLayout.jsx";
-
+import AIAssistantWidget from "./components/Assistant/AIAssistantWidget.jsx";
 
 const App = () => {
   useEffect(() => {
@@ -34,7 +34,11 @@ const App = () => {
 
     socket.emit("welcome", "message from client");
 
-    socket.emit("sendMessage", { room: "abc123", message: "Hello from client", name: "xyz" });
+    socket.emit("sendMessage", {
+      room: "abc123",
+      message: "Hello from client",
+      name: "xyz",
+    });
 
     return () => {
       socket.off("connect");
@@ -42,16 +46,13 @@ const App = () => {
     };
   }, []);
 
-  const { isAuthorized, setIsAuthorized, setUser } = useContext(Context);
+  const { setIsAuthorized, setUser } = useContext(Context);
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(
-          `${apiBaseUrl}/user/getuser`,
-          {
-            withCredentials: true,
-          }
-        );
+        const response = await axios.get(`${apiBaseUrl}/user/getuser`, {
+          withCredentials: true,
+        });
         setUser(response.data.user);
         setIsAuthorized(true);
       } catch (error) {
@@ -78,6 +79,7 @@ const App = () => {
           <Route path="/messaging" element={<MessagingLayout />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <AIAssistantWidget />
         <Footer />
         <Toaster />
       </BrowserRouter>

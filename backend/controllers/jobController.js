@@ -10,6 +10,168 @@ export const getAllJobs = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+export const searchJobs = catchAsyncErrors(async (req, res, next) => {
+  const {
+    keyword,
+    location,
+    category,
+    jobType,
+    companyName,
+    qualification,
+    minSalary,
+    maxSalary,
+    page = 1,
+    limit = 20,
+  } = req.query;
+
+  const filter = {
+    expired: false,
+  };
+
+  // Keyword search across relevant text fields.
+  if (keyword) {
+    const regex = new RegExp(keyword, "i");
+
+    filter.$or = [
+      { title: regex },
+      { description: regex },
+      { category: regex },
+      { qualification: regex },
+      { companyName: regex },
+    ];
+  }
+
+  // Location
+  if (location) {
+    filter.location = {
+      $regex: location,
+      $options: "i",
+    };
+  }
+
+  // Category
+  if (category) {
+    filter.category = {
+      $regex: category,
+      $options: "i",
+    };
+  }
+
+  // Work mode
+  if (jobType) {
+    filter.jobType = {
+      $regex: jobType,
+      $options: "i",
+    };
+  }
+
+  // Company
+  if (companyName) {
+    filter.companyName = {
+      $regex: companyName,
+      $options: "i",
+    };
+  }
+
+  // Qualification
+  if (qualification) {
+    filter.qualification = {
+      $regex: qualification,
+      $options: "i",
+    };
+  }
+
+  // Salary
+  if (minSalary || maxSalary) {
+    const min = minSalary ? Number(minSalary) : 0;
+    const max = maxSalary ? Number(maxSalary) : Infinity;
+
+    if (Number.isNaN(min) || Number.isNaN(max)) {
+      return next(new ErrorHandler("Invalid salary filter.", 400));
+    }
+
+    const salaryConditions = [];
+
+    // Jobs with salary range
+    salaryConditions.push({
+      salaryFrom: { $lte: max },
+      salaryTo: { $gte: min },
+    });
+
+    // Jobs with fixed salary
+    salaryConditions.push({
+      $expr: {
+        $and: [
+          { $ne: ["$fixedSalary", null] },
+          {
+            $gte: [
+              {
+                $convert: {
+                  input: "$fixedSalary",
+                  to: "double",
+                  onError: null,
+                  onNull: null,
+                },
+              },
+              min,
+            ],
+          },
+          {
+            $lte: [
+              {
+                $convert: {
+                  input: "$fixedSalary",
+                  to: "double",
+                  onError: null,
+                  onNull: null,
+                },
+              },
+              max,
+            ],
+          },
+        ],
+      },
+    });
+
+    filter.$or = filter.$or
+      ? [
+        {
+          $and: [
+            { $or: filter.$or },
+            { $or: salaryConditions },
+          ],
+        },
+      ]
+      : salaryConditions;
+  }
+
+  const pageNumber = Math.max(Number(page), 1);
+  const limitNumber = Math.min(
+    Math.max(Number(limit), 1),
+    50
+  );
+
+  const skip = (pageNumber - 1) * limitNumber;
+
+  const [jobs, total] = await Promise.all([
+    Job.find(filter)
+      .sort({ jobPostedOn: -1 })
+      .skip(skip)
+      .limit(limitNumber),
+
+    Job.countDocuments(filter),
+  ]);
+
+  res.status(200).json({
+    success: true,
+    count: jobs.length,
+    total,
+    page: pageNumber,
+    totalPages: Math.ceil(total / limitNumber),
+    jobs,
+  });
+});
+
 export const postJob = catchAsyncErrors(async (req, res, next) => {
   const { role } = req.user;
   if (role === "Job Seeker") {
@@ -151,7 +313,7 @@ export const deleteJob = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-export const getSingleJob = catchAsyncErrors(async (req, res, next) => {
+export const getJob = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
   try {
     const job = await Job.findById(id);

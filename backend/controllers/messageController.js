@@ -2,7 +2,7 @@ import User from "../models/userSchema.js";
 import Message from "../models/messageSchema.js";
 import { getReceiverSocketId, io } from "../server.js";
 
-// Get recent chat users for sidebar
+// Get recent chat users for sidebar.
 export async function getRecentChats(req, res) {
   try {
     const userId = req.user._id;
@@ -21,42 +21,6 @@ export async function getRecentChats(req, res) {
   }
 }
 
-export async function searchUsers(req, res) {
-  try {
-    const query = req.query.q || "";
-    if (!query) return res.status(200).json([]);
-    const userId = req.user._id;
-    const users = await User.find({
-      $and: [
-        { _id: { $ne: userId } },
-        {
-          $or: [
-            { name: { $regex: query, $options: "i" } },
-            { email: { $regex: query, $options: "i" } }
-          ]
-        }
-      ]
-    }).select("name email profilePic");
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
-  }
-}
-// Get users for sidebar
-async function getUsersForSidebar(req, res) {
-  try {
-    const currentUserId = req.user._id;
-
-    const users = await User.find({ _id: { $ne: currentUserId } }).select("name email");
-
-    res.status(200).json(users);
-  } catch (error) {
-    console.error("Error in getUsersForSidebar:", error.message);
-    res.status(500).json({ error: "Internal server error" });
-  }
-}
-
-// Get messages between current user and another user
 async function getMessages(req, res) {
   try {
     const currentUserId = req.user._id;
@@ -79,7 +43,7 @@ async function getMessages(req, res) {
   }
 }
 
-// Send message from current user to receiver
+// Send message from current user to receiver.
 async function sendMessage(req, res) {
   try {
     const text = req.body.text;
@@ -92,7 +56,7 @@ async function sendMessage(req, res) {
       text
     });
 
-    // Real-time socket emission
+    // Real-time socket emission.
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("receiveMessage", { sender: senderId, message: text });
@@ -105,15 +69,7 @@ async function sendMessage(req, res) {
   }
 }
 
-// Group into controller object
-const messageController = {
-  getUsersForSidebar,
-  getMessages,
-  sendMessage,
-  getRecentChats
-};
-
-export const getUsers = async (req, res) => {
+async function getUsers(req, res) {
   try {
     const users = await User.find().select('name email');
     res.status(200).json(users);
@@ -121,6 +77,13 @@ export const getUsers = async (req, res) => {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
   }
+};
+
+const messageController = {
+  getMessages,
+  sendMessage,
+  getRecentChats,
+  getUsers
 };
 
 export default messageController;

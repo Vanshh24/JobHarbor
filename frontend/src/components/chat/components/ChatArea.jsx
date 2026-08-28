@@ -1,82 +1,87 @@
-import { useState, useEffect } from 'react'
-import { Send, Phone, Video } from 'lucide-react'
-import socket from '../../../socket.js'
+import { useState, useEffect } from "react";
+import { Send, Phone } from "lucide-react";
+import socket from "../../../socket.js";
 
 export function ChatArea({ conversationIndex, users }) {
-  const [messages, setMessages] = useState([])
-  const [inputValue, setInputValue] = useState('')
-  const [currentUser, setCurrentUser] = useState(null)
-  const conversation = users.find(user => user._id === conversationIndex) || {}
+  const [messages, setMessages] = useState([]);
+  const [inputValue, setInputValue] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
+  const conversation =
+    users.find((user) => user._id === conversationIndex) || {};
 
   const handleSendMessage = async (e) => {
-    e.preventDefault()
-    if (!inputValue.trim() || !currentUser) return
+    e.preventDefault();
+    if (!inputValue.trim() || !currentUser) return;
     const tempMessage = {
       text: inputValue,
-      senderId: { _id: currentUser._id }
-    }
-    setMessages(prev => [...prev, tempMessage])
-    setInputValue('')
+      senderId: { _id: currentUser._id },
+    };
+    setMessages((prev) => [...prev, tempMessage]);
+    setInputValue("");
 
     try {
       const response = await fetch(`/api/v1/message/send/${conversation._id}`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ senderId: currentUser._id, text: inputValue })
-      })
-      const data = await response.json()
-
+        body: JSON.stringify({ senderId: currentUser._id, text: inputValue }),
+      });
     } catch (error) {
-      console.error('Error sending message:', error)
+      console.error("Error sending message:", error);
     }
-  }
+  };
 
   useEffect(() => {
-  socket.on("recieveMessage", ({ sender, message }) => {
-    setMessages(prev => [...prev, { text: message, senderId: { _id: sender } }]);
-  });
+    socket.on("recieveMessage", ({ sender, message }) => {
+      setMessages((prev) => [
+        ...prev,
+        { text: message, senderId: { _id: sender } },
+      ]);
+    });
 
-  return () => socket.off("receiveMessage");
-}, []);
+    return () => socket.off("receiveMessage");
+  }, []);
 
   useEffect(() => {
-    if (conversationIndex === null || !conversation._id) return
+    if (conversationIndex === null || !conversation._id) return;
 
     const fetchMessages = async () => {
       try {
-        const response = await fetch(`/api/v1/message/messages?receiverId=${conversation._id}`, {
-          method: 'GET',
-          credentials: 'include',
-        });
-        const data = await response.json()
-        setMessages(data)
+        const response = await fetch(
+          `/api/v1/message/messages?receiverId=${conversation._id}`,
+          {
+            method: "GET",
+            credentials: "include",
+          },
+        );
+        const data = await response.json();
+        setMessages(data);
 
-        console.log("Messages:", messages)
-        console.log("Conversation", conversation)
+        console.log("Messages:", messages);
+        console.log("Conversation", conversation);
       } catch (error) {
-        console.error('Error fetching messages:', error)
+        console.error("Error fetching messages:", error);
       }
     };
-    fetchMessages()
-  }, [conversationIndex, users])
+    fetchMessages();
+  }, [conversationIndex, users]);
 
   //Fetch current user
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const response = await fetch('/api/v1/auth/me', {
-          credentials: 'include',
+        const response = await fetch("/api/v1/auth/me", {
+          credentials: "include",
         });
-        const data = await response.json()
-        setCurrentUser(data)
+        const data = await response.json();
+        setCurrentUser(data);
       } catch (error) {
-        console.error('Error fetching current user:', error)
+        console.error("Error fetching current user:", error);
       }
-    }
-    fetchCurrentUser()
-  }, [])
+    };
+    fetchCurrentUser();
+  }, []);
 
   return (
     <div className="flex-1 flex flex-col bg-background">
@@ -92,9 +97,6 @@ export function ChatArea({ conversationIndex, users }) {
           <button className="p-2 rounded-full transition-colors">
             <Phone size={18} />
           </button>
-          <button className="p-2 rounded-full transition-colors">
-            <Video size={18} />
-          </button>
         </div>
       </div>
 
@@ -102,29 +104,33 @@ export function ChatArea({ conversationIndex, users }) {
       <div className="flex-1 overflow-y-auto p-4 flex-col gap-3">
         {messages.map((message, index) => (
           <div
-            className={`flex ${message.senderId._id === currentUser?._id ? 'justify-end' : 'justify-start'}`}
+            className={`flex ${message.senderId._id === currentUser?._id ? "justify-end" : "justify-start"}`}
           >
             <div
-              className={`max-w-sm break-words whitespace-pre-wrap my-1 px-4 py-2 rounded-lg ${message.senderId._id === currentUser?._id
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-muted text-foreground'
-                }`}
+              className={`max-w-sm break-words whitespace-pre-wrap my-1 px-4 py-2 rounded-lg ${
+                message.senderId._id === currentUser?._id
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-foreground"
+              }`}
             >
               <p className="text-sm">{message.text}</p>
               <p
-                className={`text-xs mt-1 ${message.senderId._id === currentUser?._id
-                  ? 'text-primary-foreground/70'
-                  : 'text-muted-foreground'
-                  }`}
-              >
-              </p>
+                className={`text-xs mt-1 ${
+                  message.senderId._id === currentUser?._id
+                    ? "text-primary-foreground/70"
+                    : "text-muted-foreground"
+                }`}
+              ></p>
             </div>
           </div>
         ))}
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSendMessage} className="border-t border-border p-4 flex gap-2">
+      <form
+        onSubmit={handleSendMessage}
+        className="border-t border-border p-4 flex gap-2"
+      >
         <input
           type="text"
           value={inputValue}
@@ -141,6 +147,6 @@ export function ChatArea({ conversationIndex, users }) {
         </button>
       </form>
     </div>
-  )
+  );
 }
-export default ChatArea
+export default ChatArea;

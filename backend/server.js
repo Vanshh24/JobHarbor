@@ -5,22 +5,17 @@ import { createServer } from "http";
 import { config } from "dotenv";
 import { dbConnection } from "./database/dbConnection.js";
 
-config({ path: "./config/config.env" });
-
+config({ path: "./.env" });
 cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_CLIENT_NAME,
   api_key: process.env.CLOUDINARY_CLIENT_API,
   api_secret: process.env.CLOUDINARY_CLIENT_SECRET,
 });
-
 dbConnection();
-console.log("MONGODB URI: ", process.env.MONGODB_URI);
 
-// 🔹 Set the port
 const PORT = process.env.PORT || 3000;
 
 const httpServer = createServer(app);
-
 export const io = new Server(httpServer, {
   cors: {
     origin: true,
@@ -56,7 +51,6 @@ io.on("connection", (socket) => {
     console.log("Client disconnected:", socket.id);
   });
 });
-
 httpServer.listen(PORT, "0.0.0.0", () => {
   console.log(`IO Server running at port ${PORT}`);
 });

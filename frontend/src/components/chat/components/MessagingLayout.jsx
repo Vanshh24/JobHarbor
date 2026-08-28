@@ -22,14 +22,11 @@ export default function MessagingLayout() {
 
   return (
     <div className="flex h-screen bg-background" id="message-layout">
-      {/* Left Sidebar - Conversations */}
       <ConversationList
         users={conversations}
         selectedConversation={selectedConversation}
         onSelectConversation={setSelectedConversation}
       />
-
-      {/* Main Chat Area */}
       <ChatArea
         conversationIndex={selectedConversation}
         users={conversations}

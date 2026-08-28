@@ -1,8 +1,5 @@
-import { MessagingLayout } from './components/MessagingLayout'
+import { MessagingLayout } from "./components/MessagingLayout";
 
 export default function MessagingPage() {
-
-  return (
-    <MessagingLayout />
-  )
+  return <MessagingLayout />;
 }

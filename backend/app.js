@@ -1,6 +1,6 @@
 import express from "express";
 import { config } from "dotenv";
-config({ path: "./config/config.env" });
+config({ path: "./.env" });
 
 import jobRouter from "./routes/jobRoutes.js";
 import userRouter from "./routes/userRoutes.js";
@@ -11,6 +11,8 @@ import { errorMiddleware } from "./middlewares/error.js";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 import { isAuthenticated } from "./middlewares/auth.js";
+import assistantRouter from "./routes/assistantRoutes.js";
+
 const app = express();
 
 app.use(
@@ -38,6 +40,7 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/application", applicationRouter);
 app.use("/api/v1/message", messageRouter);
-
+app.use("/api/v1/assistant", assistantRouter);
 app.use(errorMiddleware);
+
 export default app;
