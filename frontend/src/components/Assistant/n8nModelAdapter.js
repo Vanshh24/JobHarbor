@@ -1,4 +1,6 @@
-const API_URL = "http://localhost:3000/api/v1/assistant/chat";
+import { apiBaseUrl } from "../../config.js";
+
+const API_URL = `${apiBaseUrl}/assistant/chat`;
 const sessionId = crypto.randomUUID();
 
 export const n8nModelAdapter = {

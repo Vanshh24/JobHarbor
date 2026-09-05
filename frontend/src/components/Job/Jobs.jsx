@@ -96,7 +96,6 @@ const Jobs = () => {
           </button>
         </div>
 
-        {/* Filter chips */}
         <div className="job-filters">
           {tagLabels.map((chip) => (
             <button
@@ -109,7 +108,6 @@ const Jobs = () => {
           ))}
         </div>
 
-        {/* Job cards */}
         <div className="banner">
           {filteredJobs.length > 0 ? (
             filteredJobs.map((element) => (

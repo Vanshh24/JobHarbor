@@ -2,6 +2,7 @@ import { FaBuilding, FaSuitcase, FaUsers, FaUserPlus } from "react-icons/fa";
 import logo from "../../../public/jobharbor-logo.png";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { apiBaseUrl } from "../../config.js";
 
 const HeroSection = () => {
   const [stats, setStats] = useState({
@@ -12,10 +13,10 @@ const HeroSection = () => {
 
   useEffect(() => {
     Promise.all([
-      axios.get("http://localhost:3000/api/v1/user/stats", {
+      axios.get(`${apiBaseUrl}/user/stats`, {
         withCredentials: true,
       }),
-      axios.get("http://localhost:3000/api/v1/job/jobstats", {
+      axios.get(`${apiBaseUrl}/job/jobstats`, {
         withCredentials: true,
       }),
     ])

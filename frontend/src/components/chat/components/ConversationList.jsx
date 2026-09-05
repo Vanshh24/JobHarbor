@@ -1,6 +1,7 @@
 import { Search } from "lucide-react";
 import { ConversationItem } from "./ConversationItem";
 import { useEffect, useState } from "react";
+import { apiBaseUrl } from "../../../config.js";
 
 export function ConversationList({
   users,
@@ -21,7 +22,7 @@ export function ConversationList({
   useEffect(() => {
     const fetchChats = async () => {
       try {
-        const response = await fetch("/api/v1/message/all-chats", {
+        const response = await fetch(`${apiBaseUrl}/message/all-chats`, {
           credentials: "include",
         });
         const data = await response.json();
@@ -52,7 +53,6 @@ export function ConversationList({
         </div>
       </div>
 
-      {/* Conversations List */}
       <div className="flex-1 overflow-y-auto">
         {filteredUser.length !== 0
           ? filteredUser.map((conversation, index) => (

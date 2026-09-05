@@ -10,6 +10,7 @@ import { FaReact } from "react-icons/fa";
 import { GiArtificialIntelligence } from "react-icons/gi";
 import { IoGameController } from "react-icons/io5";
 import axios from "axios";
+import { apiBaseUrl } from "../../config.js";
 
 const PopularCategories = () => {
   const [categoryStats, setCategoryStats] = useState({
@@ -25,7 +26,7 @@ const PopularCategories = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/api/v1/job/categorystats", {
+      .get(`${apiBaseUrl}/job/categorystats`, {
         withCredentials: true,
       })
       .then((res) => {

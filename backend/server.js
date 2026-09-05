@@ -13,7 +13,7 @@ cloudinary.v2.config({
 });
 dbConnection();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 const httpServer = createServer(app);
 export const io = new Server(httpServer, {
@@ -52,5 +52,5 @@ io.on("connection", (socket) => {
   });
 });
 httpServer.listen(PORT, "0.0.0.0", () => {
-  console.log(`IO Server running at port ${PORT}`);
+  console.log(`IO Server running`);
 });

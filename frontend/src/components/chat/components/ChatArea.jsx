@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Send, Phone } from "lucide-react";
 import socket from "../../../socket.js";
+import { apiBaseUrl } from "../../../config.js";
 
 export function ChatArea({ conversationIndex, users }) {
   const [messages, setMessages] = useState([]);
@@ -20,7 +21,7 @@ export function ChatArea({ conversationIndex, users }) {
     setInputValue("");
 
     try {
-      const response = await fetch(`/api/v1/message/send/${conversation._id}`, {
+      await fetch(`${apiBaseUrl}/message/send/${conversation._id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,7 +50,7 @@ export function ChatArea({ conversationIndex, users }) {
     const fetchMessages = async () => {
       try {
         const response = await fetch(
-          `/api/v1/message/messages?receiverId=${conversation._id}`,
+          `${apiBaseUrl}/message/messages?receiverId=${conversation._id}`,
           {
             method: "GET",
             credentials: "include",
@@ -71,7 +72,7 @@ export function ChatArea({ conversationIndex, users }) {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const response = await fetch("/api/v1/auth/me", {
+        const response = await fetch(`${apiBaseUrl}/auth/me`, {
           credentials: "include",
         });
         const data = await response.json();
@@ -126,7 +127,6 @@ export function ChatArea({ conversationIndex, users }) {
         ))}
       </div>
 
-      {/* Input */}
       <form
         onSubmit={handleSendMessage}
         className="border-t border-border p-4 flex gap-2"
