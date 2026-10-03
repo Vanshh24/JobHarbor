@@ -1,6 +1,5 @@
 import express from "express";
 import { deleteJob, getAllJobs, getMyJobs, getJob, searchJobs, postJob, updateJob, countJobs, countByCategory } from "../controllers/jobController.js";
-import { isAuthenticated } from "../middlewares/auth.js";
 
 const router = express.Router();
 

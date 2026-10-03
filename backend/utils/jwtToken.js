@@ -1,6 +1,7 @@
 export const sendToken = (user, statusCode, res, message) => {
   if (!user) {
     console.error("User is not defined");
+    
     return;
   }
 

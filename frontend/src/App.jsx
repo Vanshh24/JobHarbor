@@ -16,41 +16,16 @@ import MyApplications from "./components/Application/MyApplications";
 import PostJob from "./components/Job/PostJob";
 import NotFound from "./components/NotFound/NotFound";
 import MyJobs from "./components/Job/MyJobs";
-import socket from "./socket.js";
 import { apiBaseUrl } from "./config.js";
 import MessagingLayout from "./components/chat/components/MessagingLayout.jsx";
 import AIAssistantWidget from "./components/Assistant/AIAssistantWidget.jsx";
 
 const App = () => {
-  useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Connected to Socket.IO server:", socket.id);
-      socket.emit("join", { roomId: "abc123", user: socket.id });
-    });
-
-    socket.on("welcome", (message) => {
-      console.log("Received 'welcome' event from server:", message);
-    });
-
-    socket.emit("welcome", "message from client");
-
-    socket.emit("sendMessage", {
-      room: "abc123",
-      message: "Hello from client",
-      name: "xyz",
-    });
-
-    return () => {
-      socket.off("connect");
-      socket.off("welcome");
-    };
-  }, []);
-
   const { setIsAuthorized, setUser } = useContext(Context);
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`${apiBaseUrl}/user/getuser`, {
+        const response = await axios.get(`${apiBaseUrl}/user/me`, {
           withCredentials: true,
         });
         setUser(response.data.user);
