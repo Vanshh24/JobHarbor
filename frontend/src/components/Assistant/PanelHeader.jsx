@@ -1,10 +1,6 @@
 import IconButton from "./IconButton";
 import { CloseIcon, ResetIcon } from "./icons";
 
-/**
- * Dark header bar: assistant name on the left, and voice / new-chat /
- * close controls on the right.
- */
 const PanelHeader = ({ title, onReset, onClose }) => (
   <header className="aui-panel-header">
     <h2 className="aui-panel-title">{title}</h2>

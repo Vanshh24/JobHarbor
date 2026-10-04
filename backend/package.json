@@ -16,6 +16,7 @@
     "express-fileupload": "^1.4.3",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.0.3",
+    "ndjson-readablestream": "^1.4.0",
     "nodemon": "^3.1.4",
     "socket.io": "^4.8.3",
     "validator": "^13.11.0"

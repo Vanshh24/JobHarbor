@@ -10,7 +10,7 @@ export const getAllJobs = catchAsyncErrors(async (req, res, next) => {
 export const searchJobs = catchAsyncErrors(async (req, res) => {
   const {
     keyword, location, category, jobType,
-    companyName, qualification, minSalary, maxSalary, page = 1, limit = 5
+    companyName, qualification, minSalary, maxSalary
   } = req.query;
   const filter = { expired: false };
 
@@ -47,8 +47,7 @@ export const searchJobs = catchAsyncErrors(async (req, res) => {
       }
     },
     { $match: filter },
-    { $skip: (page - 1) * limit },
-    { $limit: limit }
+    { $limit: 5 }
   ]);
 
   res.json({ success: true, jobs });

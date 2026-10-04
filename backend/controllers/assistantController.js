@@ -1,65 +1,31 @@
+import readNDJSONStream from 'ndjson-readablestream'
+
 export const chat = async (req, res) => {
-    try {
-        const { sessionId, chatInput } = req.body;
-        const N8N_WEBHOOK_URL = process.env.WEBHOOK_URL;
+    console.log("========== BACKEND REQUEST ==========");
+    console.log("BODY:", req.body);
+    console.log("FETCHING N8N...");
 
-        if (!sessionId) {
-            return res.status(400).json({ error: "sessionId is required" });
-        }
-        if (!chatInput) {
-            return res.status(400).json({ error: "chatInput is required" });
-        }
-        if (!N8N_WEBHOOK_URL) {
-            return res.status(500).json({ error: "N8N_WEBHOOK_URL is not configured" });
-        }
+    const n8nResponse = await fetch(process.env.WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(req.body)
+    })
 
-        const response = await fetch(N8N_WEBHOOK_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ sessionId, chatInput }),
-        });
+    console.log("N8N FETCH RESOLVED");
+    console.log("STATUS:", n8nResponse.status);
+    console.log("CONTENT-TYPE:", n8nResponse.headers.get("content-type"));
+    res.setHeader('Content-Type', 'text/event-stream')
+    res.setHeader('Cache-Control', 'no-cache')
+    res.setHeader('Connection', 'keep-alive')
+    console.log("STARTING NDJSON READER...");
+    for await (const event of readNDJSONStream(n8nResponse.body)) {
+        console.log("N8N EVENT:", event);
 
-        if (!response.ok || !response.body) {
-            const errorText = await response.text();
-
-            console.error("n8n error:", errorText);
-
-            return res.status(response.status || 500).json({ error: "n8n request failed" });
-        }
-
-        res.status(200);
-        res.setHeader(
-            "Content-Type",
-            response.headers.get("content-type") ||
-            "text/event-stream; charset=utf-8"
-        );
-        res.setHeader("Cache-Control", "no-cache");
-        res.setHeader("Connection", "keep-alive");
-
-        const reader = response.body.getReader();
-
-        try {
-            while (true) {
-                const { done, value } = await reader.read();
-
-                if (done) break;
-
-                res.write(Buffer.from(value));
-            }
-        } finally {
-            reader.releaseLock();
-        }
-        res.end();
-
-    } catch (error) {
-        console.error("Assistant error:", error);
-
-        if (!res.headersSent) {
-            res.status(500).json({ error: "Failed to process assistant request" });
-        } else {
-            res.end();
+        if (event.type === 'item') {
+            res.write(`data: ${JSON.stringify({ type: 'item', content: event.content })}\n\n`)
         }
     }
-};
+    console.log("NDJSON LOOP ENDED");
+    res.write(`data: ${JSON.stringify({ type: 'done' })}\n\n`)
+    res.end()
+}

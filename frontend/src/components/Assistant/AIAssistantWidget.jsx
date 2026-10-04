@@ -7,31 +7,17 @@ import "./aiAssistant.css";
 
 const ASSISTANT_NAME = "JobHarbor AI Assistant";
 
-/**
- * Floating AI assistant widget: a launcher button fixed to the
- * bottom-right corner that opens a popup chat panel above it.
- *
- * Usage: render <AIAssistantWidget /> once, anywhere inside <App />
- * (it's self-positioning via fixed CSS, so placement in the tree doesn't
- * matter). The actual LLM call lives in
- * ./runtime/n8nModelAdapter.js - that's the only file to edit to connect
- * your n8n workflow.
- *
- * Positioning, focus management, outside-click and Escape-to-close are
- * all handled by Radix's Popover (assistant-ui itself is headless and
- * doesn't ship this kind of anchored-panel chrome).
- */
 const AIAssistantWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
-  // Bumping this remounts AIAssistantRuntimeProvider with a fresh
-  // useLocalRuntime call, i.e. it starts a brand-new conversation.
-  const [sessionId, setSessionId] = useState(0);
+  const [sessionId, setSessionId] = useState(() => crypto.randomUUID());
 
   const closePanel = useCallback(() => setIsOpen(false), []);
-  const resetConversation = useCallback(() => setSessionId((id) => id + 1), []);
+  const resetConversation = useCallback(() => {
+    setSessionId(crypto.randomUUID());
+  }, []);
 
   return (
-    <AIAssistantRuntimeProvider key={sessionId}>
+    <AIAssistantRuntimeProvider key={sessionId} sessionId={sessionId}>
       <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
         <Popover.Trigger asChild>
           <LauncherButton isOpen={isOpen} />

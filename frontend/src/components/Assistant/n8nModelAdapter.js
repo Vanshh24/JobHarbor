@@ -1,9 +1,8 @@
 import { apiBaseUrl } from "../../config.js";
 
 const API_URL = `${apiBaseUrl}/assistant/chat`;
-const sessionId = crypto.randomUUID();
 
-export const n8nModelAdapter = {
+export const n8nModelAdapter = (sessionId) => ({
   async *run({ messages, abortSignal }) {
     const latestUserMessage = [...messages]
       .reverse()
@@ -46,59 +45,21 @@ export const n8nModelAdapter = {
     while (true) {
       const { done, value } = await reader.read();
 
-      if (done) {
-        break;
-      }
+      if (done) break;
 
-      buffer += decoder.decode(value, {
-        stream: true,
-      });
+      buffer += decoder.decode(value, { stream: true });
 
       const lines = buffer.split("\n");
-
       buffer = lines.pop() || "";
 
       for (const line of lines) {
         const trimmed = line.trim();
 
-        if (!trimmed) {
+        if (!trimmed || !trimmed.startsWith("data: ")) {
           continue;
         }
 
-        try {
-          const event = JSON.parse(trimmed);
-
-          if (
-            event.type === "item" &&
-            typeof event.content === "string"
-          ) {
-            accumulatedText += event.content;
-
-            yield {
-              content: [
-                {
-                  type: "text",
-                  text: accumulatedText,
-                },
-              ],
-            };
-          }
-        } catch (error) {
-          console.warn(
-            "Unable to parse n8n stream event:",
-            trimmed,
-          );
-        }
-      }
-    }
-
-    buffer += decoder.decode();
-
-    const remaining = buffer.trim();
-
-    if (remaining) {
-      try {
-        const event = JSON.parse(remaining);
+        const event = JSON.parse(trimmed.slice(6));
 
         if (
           event.type === "item" &&
@@ -115,12 +76,7 @@ export const n8nModelAdapter = {
             ],
           };
         }
-      } catch (error) {
-        console.warn(
-          "Unable to parse final n8n stream event:",
-          remaining,
-        );
       }
     }
   },
-};
+});
