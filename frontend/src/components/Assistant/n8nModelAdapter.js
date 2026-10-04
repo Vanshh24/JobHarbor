@@ -7,7 +7,6 @@ export const n8nModelAdapter = (sessionId) => ({
     const latestUserMessage = [...messages]
       .reverse()
       .find((message) => message.role === "user");
-
     const chatInput =
       latestUserMessage?.content
         ?.filter((part) => part.type === "text")
@@ -38,23 +37,22 @@ export const n8nModelAdapter = (sessionId) => ({
 
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
-
     let buffer = "";
     let accumulatedText = "";
 
     while (true) {
       const { done, value } = await reader.read();
 
-      if (done) break;
+      if (done) {
+        break
+      }
 
       buffer += decoder.decode(value, { stream: true });
-
       const lines = buffer.split("\n");
       buffer = lines.pop() || "";
 
       for (const line of lines) {
         const trimmed = line.trim();
-
         if (!trimmed || !trimmed.startsWith("data: ")) {
           continue;
         }
