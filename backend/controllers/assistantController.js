@@ -1,7 +1,7 @@
 import readNDJSONStream from 'ndjson-readablestream'
 
 export const chat = async (req, res) => {
-    const n8nResponse = await fetch(process.env.WEBHOOK_URL, {
+    const n8nResponse = await fetch(process.env.N8N_WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(req.body)
