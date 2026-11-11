@@ -16,7 +16,7 @@ import assistantRouter from "./routes/assistantRoutes.js";
 const app = express();
 
 app.use(
-  cors({ origin: true, credentials: true })
+  cors({ origin: "http://localhost:5173", credentials: true })
 );
 app.use(cookieParser());
 app.use(express.json());
