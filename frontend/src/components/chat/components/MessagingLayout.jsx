@@ -21,7 +21,10 @@ export default function MessagingLayout() {
   }, []);
 
   return (
-    <div className="flex h-screen bg-background" id="message-layout">
+    <div
+      className="flex h-[calc(100vh-55px)] bg-background"
+      id="message-layout"
+    >
       <ConversationList
         users={conversations}
         selectedConversation={selectedConversation}

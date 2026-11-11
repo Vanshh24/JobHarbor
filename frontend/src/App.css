@@ -335,9 +335,23 @@ p {
 }
 
 /* Card additions */
-.card-title    { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
-.card-category { font-size: 12px; color: #5f5e5a; margin-bottom: 4px; }
-.card-location { font-size: 12px; color: #888780; margin-bottom: 10px; }
+.card-title {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.card-category {
+  font-size: 12px;
+  color: #5f5e5a;
+  margin-bottom: 4px;
+}
+
+.card-location {
+  font-size: 12px;
+  color: #888780;
+  margin-bottom: 10px;
+}
 
 .card-tags {
   display: flex;
@@ -1610,6 +1624,12 @@ i {
 nav {
   background: #18191c;
   padding: 0 20px;
+  position: fixed;
+  width: 100%;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  height: 60px;
 }
 
 nav .container {
@@ -1617,6 +1637,7 @@ nav .container {
   display: flex;
   font-size: 20px;
   justify-content: space-between;
+  height: 100%;
 }
 
 nav .container .logo {
@@ -1688,6 +1709,10 @@ nav .hamburger {
   display: none;
 }
 
+.route-content--with-navbar {
+  padding-top: 55px;
+}
+
 @media (max-width: 1520px) {
   nav .container {
     min-width: 100%;
@@ -1695,17 +1720,6 @@ nav .hamburger {
 }
 
 @media (max-width: 1130px) {
-  .page {
-    padding-top: 120px;
-  }
-
-  nav {
-    position: fixed;
-    width: 100%;
-    left: 0;
-    top: 0;
-    z-index: 10;
-  }
 
   nav .hamburger {
     display: block;
@@ -1831,7 +1845,7 @@ nav .hamburger {
 }
 
 .resume-modal .modal-content img {
-  max-width: 550px;
+  max-width: 56vh;
   height: auto;
 }
 

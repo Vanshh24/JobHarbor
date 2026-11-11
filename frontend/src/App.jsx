@@ -21,7 +21,7 @@ import MessagingLayout from "./components/chat/components/MessagingLayout.jsx";
 import AIAssistantWidget from "./components/Assistant/AIAssistantWidget.jsx";
 
 const App = () => {
-  const { setIsAuthorized, setUser } = useContext(Context);
+  const { isAuthorized, setIsAuthorized, setUser } = useContext(Context);
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -41,19 +41,27 @@ const App = () => {
     <>
       <BrowserRouter>
         <Navbar />
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/" element={<Home />} />
-          <Route path="/job/getall" element={<Jobs />} />
-          <Route path="/job/:id" element={<JobDetails />} />
-          <Route path="/application/:id" element={<Application />} />
-          <Route path="/applications/me" element={<MyApplications />} />
-          <Route path="/job/post" element={<PostJob />} />
-          <Route path="/job/me" element={<MyJobs />} />
-          <Route path="/messaging" element={<MessagingLayout />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <main
+          className={
+            isAuthorized
+              ? "route-content route-content--with-navbar"
+              : "route-content"
+          }
+        >
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/job/getall" element={<Jobs />} />
+            <Route path="/job/:id" element={<JobDetails />} />
+            <Route path="/application/:id" element={<Application />} />
+            <Route path="/applications/me" element={<MyApplications />} />
+            <Route path="/job/post" element={<PostJob />} />
+            <Route path="/job/me" element={<MyJobs />} />
+            <Route path="/messaging" element={<MessagingLayout />} />
+            <Route path="*" element={<NotFound />} />{" "}
+          </Routes>
+        </main>
         <AIAssistantWidget />
         <Footer />
         <Toaster />
